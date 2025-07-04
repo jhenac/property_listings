@@ -1,4 +1,7 @@
 import pandas as pd
+
+class HubzuCleaner:
+    
 df = pd.read_csv('./input/Hubzu.csv')
 
 df = df.dropna(subset=['Address', 'Date']) #drop null values from Address & Date
