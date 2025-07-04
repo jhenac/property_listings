@@ -28,46 +28,61 @@ class Aggregator:
         """
         Replace or remove symbols from Address.
         """
-        self.df['Address'] = self.df['Address'].str.replace('.', '')
-        self.df['Address'] = self.df['Address'].str.replace(',', '')
-        self.df['Address'] = self.df['Address'].str.replace('#', '')
-        self.df['Address'] = self.df['Address'].str.replace('& ', '')
-        self.df['Address'] = self.df['Address'].str.replace('-', ' ')
+        replace_map = {
+        '.': '',
+        ',': '',
+        '#': '',
+        '& ': '',
+        '-': ' '
+    }
+
+        for old, new in replace_map.items():
+            self.df['Address'] = self.df['Address'].str.replace(old, new, regex=False)
 
     def abbreviate_address(self):
         """"
         Abbreviate common address keywords.
         """
-        self.df['Address'] = self.df['Address'].str.replace('Street', 'St')
-        self.df['Address'] = self.df['Address'].str.replace('Drive', 'Dr')
-        self.df['Address'] = self.df['Address'].str.replace('Road', 'Rd')
-        self.df['Address'] = self.df['Address'].str.replace('Lane', 'Ln')
-        self.df['Address'] = self.df['Address'].str.replace('Avenue', 'Ave')
-        self.df['Address'] = self.df['Address'].str.replace('Terrace', 'Ter')
-        self.df['Address'] = self.df['Address'].str.replace('Circle', 'Cir')
-        self.df['Address'] = self.df['Address'].str.replace('Court', 'Ct')
-        self.df['Address'] = self.df['Address'].str.replace('Place', 'Pl')
-        self.df['Address'] = self.df['Address'].str.replace('Boulevard', 'Blvd')
-        self.df['Address'] = self.df['Address'].str.replace('Parkway', 'Pkwy')
-        self.df['Address'] = self.df['Address'].str.replace('Ridge', 'Rdg')
-        self.df['Address'] = self.df['Address'].str.replace('Trail', 'Trl')
-        self.df['Address'] = self.df['Address'].str.replace('North', 'N')
-        self.df['Address'] = self.df['Address'].str.replace('Northeast', 'NE')
-        self.df['Address'] = self.df['Address'].str.replace('Northwest', 'NW')
-        self.df['Address'] = self.df['Address'].str.replace('South', 'S')
-        self.df['Address'] = self.df['Address'].str.replace('Southeast', 'SE')
-        self.df['Address'] = self.df['Address'].str.replace('Southwest', 'SW')
-        self.df['Address'] = self.df['Address'].str.replace('East', 'E')
-        self.df['Address'] = self.df['Address'].str.replace('West', 'W')
+        replace_map = {
+        'Street': 'St',
+        'Drive': 'Dr',
+        'Road': 'Rd',
+        'Lane': 'Ln',
+        'Avenue': 'Ave',
+        'Terrace': 'Ter',
+        'Circle': 'Cir',
+        'Court': 'Ct',
+        'Place': 'Pl',
+        'Boulevard': 'Blvd',
+        'Parkway': 'Pkwy',
+        'Ridge': 'Rdg',
+        'Trail': 'Trl',
+        'Northeast': 'NE',
+        'Northwest': 'NW',
+        'Southeast': 'SE',
+        'Southwest': 'SW',
+        'North': 'N',
+        'South': 'S',
+        'East': 'E',
+        'West': 'W'
+    }
+
+        for full, abbr in replace_map.items():
+            self.df['Address'] = self.df['Address'].str.replace(full, abbr, regex=False)
 
     def capitalize_atty(self):
         """
         Capitalize common terms in Atty column.
         """
-        self.df['Atty'] = self.df['Atty'].str.replace('Llc', 'LLC')
-        self.df['Atty'] = self.df['Atty'].str.replace('llc', 'LLC')
-        self.df['Atty'] = self.df['Atty'].str.replace('Llp', 'LLP')
-        self.df['Atty'] = self.df['Atty'].str.replace('Pc', 'PC')
+        replace_map = {
+        'Llc': 'LLC',
+        'llc': 'LLC',
+        'Llp': 'LLP',
+        'Pc': 'PC'
+    }
+
+        for old, new in replace_map.items():
+            self.df['Atty'] = self.df['Atty'].str.replace(old, new, regex=False)
 
     def clean_county(self):
         """
