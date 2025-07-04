@@ -2,22 +2,22 @@ import pandas as pd
 
 class RfcCleaner:
         
-    def __init__(self, input_path: str, output_path:str, minimum_value: int, maximum_value: int, initial_cols: list, final_cols: list):
+    def __init__(self, input_path: str, minimum_value: int, maximum_value: int, initial_cols: list, final_cols: list):
         """
         Initializes the cleaner with file paths and price range.
         """
         self.input_path = input_path
-        self.output_path = output_path
         self.minimum_value = minimum_value
         self.maximum_value = maximum_value
         self.initial_cols = initial_cols
         self.final_cols = final_cols
-        self.df = pd.read_csv(self.input_path)
 
         try:
             self.df = pd.read_csv(self.input_path)
         except Exception as e:
-            raise RuntimeError(f"Failed to read input CSV file {e}")
+            raise RuntimeError(f"Failed to read input CSV file at '{self.input_path}' {e}")
+
+        self.df.columns = self.df.columns.str.strip()
         
     def check_missing_columns(self):   
         """
@@ -78,7 +78,7 @@ class RfcCleaner:
     def finalize(self):
         self.df = self.df.drop_duplicates(subset=['Address'])
         self.df = self.df.reindex(columns=self.final_cols)
-        self.df.to_csv(self.output_path, index=False)
+        return self.df
 
     def run(self):
         self.check_missing_columns()
@@ -87,4 +87,4 @@ class RfcCleaner:
         self.remove_timeshare()
         self.filter_price()
         self.extract_location()
-        self.finalize()
+        return self.finalize()

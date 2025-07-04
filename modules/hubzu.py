@@ -2,21 +2,22 @@ import pandas as pd
 
 class HubzuCleaner:
 
-    def __init__(self, input_path: str, output_path:str, start_date: str, end_date: str, initial_cols: list, final_cols: list):
+    def __init__(self, input_path: str, start_date: str, end_date: str, initial_cols: list, final_cols: list):
         """
         Initializes the cleaner with file paths and date range.
         """
         self.input_path = input_path
-        self.output_path = output_path
-        self.start_date = start_date
-        self.end_date = end_date
+        self.start_date = pd.to_datetime(start_date)
+        self.end_date = pd.to_datetime(end_date)
         self.initial_cols = initial_cols
         self.final_cols = final_cols
 
         try:
             self.df = pd.read_csv(self.input_path)
         except Exception as e:
-            raise RuntimeError(f"Failed to read input CSV file {e}")
+            raise RuntimeError(f"Failed to read input CSV file at '{self.input_path}' {e}")
+
+        self.df.columns = self.df.columns.str.strip()
 
     def check_missing_columns(self):   
         """
@@ -46,8 +47,6 @@ class HubzuCleaner:
         """
         Filters rows within specified date range.
         """
-        self.start_date = pd.to_datetime(self.start_date)
-        self.end_date = pd.to_datetime(self.end_date)
         self.df = self.df[self.df['Date'] >= self.start_date]
         self.df = self.df[self.df['Date'] <= self.end_date]
 
@@ -75,7 +74,7 @@ class HubzuCleaner:
         """
         self.df = self.df.drop_duplicates(subset=['Address'])
         self.df = self.df.reindex(columns=self.final_cols)
-        self.df.to_csv(self.output_path, index=False)
+        return self.df
     
     def run(self):
         """
@@ -87,4 +86,4 @@ class HubzuCleaner:
         self.remove_invalid_dates()
         self.split_address2()
         self.clean_case()
-        self.finalize()
+        return self.finalize()
