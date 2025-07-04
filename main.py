@@ -13,8 +13,8 @@ input_files = {
 }
 
 
-start_date = '2025-07-02'
-end_date = '2025-08-02'
+start_date = '2025-07-09'
+end_date = '2025-08-09'
 minimum_value = 100000
 maximum_value = 700000
 initial_columns = ['Address', 'Address2', 'Date', 'Case', 'URL', 'Source', 'Atty', 'Atty_Contact']
