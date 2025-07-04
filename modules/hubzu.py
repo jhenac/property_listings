@@ -4,7 +4,7 @@ class HubzuCleaner:
 
     def __init__(self, input_path: str, output_path:str, start_date: str, end_date: str, initial_cols: list, final_cols: list):
         """
-        Initializes the HubzuCleaner with file paths and date range.
+        Initializes the cleaner with file paths and date range.
         """
         self.input_path = input_path
         self.output_path = output_path

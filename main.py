@@ -2,6 +2,7 @@ import pandas as pd
 import glob
 from modules.hubzu import HubzuCleaner
 from modules.auction import AuctionCleaner
+from modules.realforeclose import RfcCleaner
 
 start_date = '2025-07-02'
 end_date = '2025-08-02'
@@ -31,6 +32,16 @@ auction_cleaner = AuctionCleaner(
     final_cols=final_columns
 )
 auction_cleaner.run()
+
+rfc_cleaner = RfcCleaner(
+    input_path=('./input/RFC.csv'),
+    output_path=('./output/RFC2.csv'),
+    minimum_value=minimum_value,
+    maximum_value=maximum_value,
+    initial_cols=initial_columns,
+    final_cols=final_columns
+)
+rfc_cleaner.run()
 
 files_paths = glob.glob('./output/*2.csv')
 dfs = [pd.read_csv(path) for path in files_paths]

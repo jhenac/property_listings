@@ -4,7 +4,7 @@ class AuctionCleaner:
 
     def __init__(self, input_path: str, output_path: str, start_date: str, end_date: str, minimum_value: str, maximum_value: str, initial_cols: list, final_cols: list):
         """
-        Initializes the HubzuCleaner with file paths and date range.
+        Initializes the cleaner with file paths, price range and date range.
         """
         self.input_path = input_path
         self.output_path = output_path
@@ -63,7 +63,7 @@ class AuctionCleaner:
         self.df = self.df[(self.df['Value'].isna()) | (self.df['Value'] >= 100000)]
         self.df = self.df[(self.df['Value'].isna()) | (self.df['Value'] <= 700000)]
 
-    def date_and_time(self):
+    def create_date_time(self):
         """
         Creates date and time columns.
         """
@@ -100,6 +100,6 @@ class AuctionCleaner:
         self.atty_contact()
         self.clean_address()
         self.filter_price()
-        self.date_and_time()
+        self.create_date_time()
         self.remove_invalid_dates()
         self.finalize()
