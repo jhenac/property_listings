@@ -2,7 +2,7 @@ import pandas as pd
 
 class HubzuCleaner:
 
-    def __init__(self, input_path: str, output_path:str, start_date: str, end_date: str, final_cols: list):
+    def __init__(self, input_path: str, output_path:str, start_date: str, end_date: str, initial_cols: list, final_cols: list):
         """
         Initializes the HubzuCleaner with file paths and date range.
         """
@@ -10,12 +10,21 @@ class HubzuCleaner:
         self.output_path = output_path
         self.start_date = start_date
         self.end_date = end_date
-        self.cols = final_cols
+        self.initial_cols = initial_cols
+        self.final_cols = final_cols
 
         try:
             self.df = pd.read_csv(self.input_path)
         except Exception as e:
             raise RuntimeError(f"Failed to read input CSV file {e}")
+
+    def check_missing_columns(self):   
+        """
+        Check for missing initial columns.
+        """
+        missing_cols = [col for col in self.initial_cols if col not in self.df.columns]
+        if missing_cols:
+            raise ValueError(f"Missing required column(s): {','.join(missing_cols)}. Aborting.")
     
     def drop_invalid_rows(self):
        """
@@ -35,7 +44,7 @@ class HubzuCleaner:
 
     def remove_invalid_dates(self):
         """
-        Filters rows to keep only specified date.
+        Filters rows within specified date range.
         """
         self.start_date = pd.to_datetime(self.start_date)
         self.end_date = pd.to_datetime(self.end_date)
@@ -65,13 +74,14 @@ class HubzuCleaner:
         Creates the final csv.
         """
         self.df = self.df.drop_duplicates(subset=['Address'])
-        self.df = self.df.reindex(columns=self.cols)
+        self.df = self.df.reindex(columns=self.final_cols)
         self.df.to_csv(self.output_path, index=False)
     
     def run(self):
         """
         Runs the full cleaning pipeline.
         """
+        self.check_missing_columns()
         self.drop_invalid_rows()
         self.split_date_time()
         self.remove_invalid_dates()

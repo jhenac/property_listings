@@ -1,9 +1,13 @@
 import pandas as pd
 import glob
 from modules.hubzu import HubzuCleaner
+from modules.auction import AuctionCleaner
 
 start_date = '2025-07-02'
 end_date = '2025-08-02'
+minimum_value = 100000
+maximum_value = 700000
+initial_columns = ['Address', 'Address2', 'Date', 'Case', 'URL', 'Source', 'Atty', 'Atty_Contact']
 final_columns = ['Address', 'City', 'State', 'Postal', 'County', 'Date', 'Time', 'Case', 'URL', 'Source', 'Atty', 'Atty_Contact']
 
 hubzu_cleaner = HubzuCleaner(
@@ -11,9 +15,22 @@ hubzu_cleaner = HubzuCleaner(
     output_path="./output/Hubzu2.csv",
     start_date=start_date,
     end_date=end_date,
+    initial_cols = initial_columns,
     final_cols=final_columns
 )
 hubzu_cleaner.run()
+
+auction_cleaner = AuctionCleaner(
+    input_path="./input/Auction.csv",
+    output_path="./output/Auction2.csv",
+    start_date=start_date,
+    end_date=end_date,
+    minimum_value=minimum_value,
+    maximum_value=maximum_value,
+    initial_cols=initial_columns,
+    final_cols=final_columns
+)
+auction_cleaner.run()
 
 files_paths = glob.glob('./output/*2.csv')
 dfs = [pd.read_csv(path) for path in files_paths]
