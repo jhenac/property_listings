@@ -1,5 +1,19 @@
 import pandas as pd
 import glob
+from modules.hubzu import HubzuCleaner
+
+start_date = '2025-07-02'
+end_date = '2025-08-02'
+final_columns = ['Address', 'City', 'State', 'Postal', 'County', 'Date', 'Time', 'Case', 'URL', 'Source', 'Atty', 'Atty_Contact']
+
+hubzu_cleaner = HubzuCleaner(
+    input_path="./input/Hubzu.csv",
+    output_path="./output/Hubzu2.csv",
+    start_date=start_date,
+    end_date=end_date,
+    final_cols=final_columns
+)
+hubzu_cleaner.run()
 
 files_paths = glob.glob('./output/*2.csv')
 dfs = [pd.read_csv(path) for path in files_paths]
